@@ -11,7 +11,7 @@ function AddTodoForm() {
         autoComplete="off"
         id="name"
         type="text"
-        className="border rounded-md px-4 py-2 border-gray-400 focus:outline-none text-gray-700 "
+        className="border rounded-md px-4 py-2 border-gray-400 focus:outline-none focus:border-blue-500 text-gray-700 "
         placeholder="Add todo ..."
         value={value}
         onChange={(e) => setValue(e.target.value)}
