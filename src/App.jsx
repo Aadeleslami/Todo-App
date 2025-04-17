@@ -1,10 +1,8 @@
-import { useSelector } from "react-redux"
+
 import AddTodoForm from "./components/AddTodoForm"
 import TodoList from "./components/TodoList"
 
 function App() {
- const todos =  useSelector((state)=> state.todos)
- console.log(todos);
  
   return (
     <div className="container pt-3 mx-auto md:max-w-2xl">

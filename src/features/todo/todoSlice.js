@@ -7,11 +7,12 @@ const totoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: (state, action) => {
-      const newTodo = {
-        id: Date.now(),
-        title: action.payload.title,
-        completed: false,
-      };
+      const newTodo = 
+        {
+            id: Date.now(),
+            title: action.payload.title,
+            completed: false,
+          }
       state.todos.push(newTodo);
     },
     toggleTodo: (state, action) => {

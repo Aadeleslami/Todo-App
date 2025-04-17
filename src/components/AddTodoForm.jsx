@@ -1,9 +1,21 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../features/todo/todoSlice";
 
 function AddTodoForm() {
-    const [value,setValue] = useState("")
+  const [value, setValue] = useState("");
+  const dispatch = useDispatch();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!value)return;
+    dispatch(addTodo({ title: value }));
+    setValue("");
+  };
   return (
-    <form className="flex flex-col justify-center mt-3 mb-4 px-4">
+    <form
+      className="flex flex-col justify-center mt-3 mb-4 px-4"
+      onSubmit={handleSubmit}
+    >
       <label htmlFor="name" className="mb-1">
         Name
       </label>
@@ -16,8 +28,12 @@ function AddTodoForm() {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      <button type="submit" className="p-2 bg-blue-600 rounded text-white cursor-pointer mt-4 ">submit</button>
-
+      <button
+        type="submit"
+        className="p-2 bg-blue-600 rounded text-white cursor-pointer mt-4 "
+      >
+        submit
+      </button>
     </form>
   );
 }
