@@ -15,10 +15,10 @@ const totoSlice = createSlice({
       state.todos.push(newTodo);
     },
     toggleTodo: (state, action) => {
-      state.todos = state.todos.find(
+      const selectedTodo = state.todos.find(
         (todo) => todo.id === Number(action.payload.id)
       );
-      state.todos.completed = !state.todos.completed;
+      selectedTodo.completed = !selectedTodo.completed;
     },
     deleteTodo: (state, action) => {
       state.todos = state.todos.filter(
