@@ -1,19 +1,22 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTodo } from "../features/todo/todoSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addAsyncTodo } from "../features/todo/todoSlice";
 
 function AddTodoForm() {
   const [value, setValue] = useState("");
+  const { loading } = useSelector((state) => state.todos);
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!value)return;
-    dispatch(addTodo({ title: value }));
+    if (!value) return;
+    dispatch(addAsyncTodo({ title: value }));
     setValue("");
   };
   return (
     <form
-      className="flex flex-col justify-center mt-3 mb-4 px-4"
+      className={`flex flex-col justify-center mt-3 mb-4 px-4 ${
+        loading ? "opacity-30" : "opacity-100"
+      }`}
       onSubmit={handleSubmit}
     >
       <label htmlFor="name" className="mb-1">
@@ -29,10 +32,11 @@ function AddTodoForm() {
         onChange={(e) => setValue(e.target.value)}
       />
       <button
+        disabled={loading}
         type="submit"
         className="p-2 bg-blue-600 rounded text-white cursor-pointer mt-4 "
       >
-        submit
+        {loading ? "Submitting...." : "Submit"}
       </button>
     </form>
   );

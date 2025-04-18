@@ -19,7 +19,22 @@ export const getAsyncTodos = createAsyncThunk(
     }
   }
 );
-const totoSlice = createSlice({
+export const addAsyncTodo = createAsyncThunk(
+  "todos/addAsyncTodo",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post("/todos", {
+        title: payload.title,
+        id: Date.now(),
+        completed: false,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
@@ -44,20 +59,30 @@ const totoSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getAsyncTodos.pending, (state, action) => {
-      state.loading = true;
-      state.todos=[]
-      state.error=""
-    }).addCase(getAsyncTodos.fulfilled,(state,action)=>{
-      state.loading = false
-      state.todos = action.payload
-      state.error = ""
-    }).addCase(getAsyncTodos.rejected,(state,action)=>{
-      state.loading = false
-      state.todos=[]
-      state.error = action.payload
-    });
+    builder
+      .addCase(getAsyncTodos.pending, (state, action) => {
+        state.loading = true;
+        state.todos = [];
+        state.error = "";
+      })
+      .addCase(getAsyncTodos.fulfilled, (state, action) => {
+        state.loading = false;
+        state.todos = action.payload;
+        state.error = "";
+      })
+      .addCase(getAsyncTodos.rejected, (state, action) => {
+        state.loading = false;
+        state.todos = [];
+        state.error = action.payload;
+      })
+      .addCase(addAsyncTodo.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(addAsyncTodo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.todos.push(action.payload);
+      });
   },
 });
-export const { addTodo, toggleTodo, deleteTodo } = totoSlice.actions;
-export default totoSlice.reducer;
+export const { addTodo, toggleTodo, deleteTodo } = todoSlice.actions;
+export default todoSlice.reducer;
