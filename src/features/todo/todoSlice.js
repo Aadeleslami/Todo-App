@@ -1,18 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 const initialState = {
+  loading: false,
   todos: [],
+  error: "",
 };
+const api = axios.create({
+  baseURL: "http://localhost:5000",
+});
+export const getAsyncTodos = createAsyncThunk(
+  "todos/getAsyncTodos",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get("/todos");
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 const totoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
     addTodo: (state, action) => {
-      const newTodo = 
-        {
-            id: Date.now(),
-            title: action.payload.title,
-            completed: false,
-          }
+      const newTodo = {
+        id: Date.now(),
+        title: action.payload.title,
+        completed: false,
+      };
       state.todos.push(newTodo);
     },
     toggleTodo: (state, action) => {
@@ -27,6 +43,21 @@ const totoSlice = createSlice({
       );
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(getAsyncTodos.pending, (state, action) => {
+      state.loading = true;
+      state.todos=[]
+      state.error=""
+    }).addCase(getAsyncTodos.fulfilled,(state,action)=>{
+      state.loading = false
+      state.todos = action.payload
+      state.error = ""
+    }).addCase(getAsyncTodos.rejected,(state,action)=>{
+      state.loading = false
+      state.todos=[]
+      state.error = action.payload
+    });
+  },
 });
-export const {addTodo,toggleTodo,deleteTodo} = totoSlice.actions
-export default totoSlice.reducer
+export const { addTodo, toggleTodo, deleteTodo } = totoSlice.actions;
+export default totoSlice.reducer;

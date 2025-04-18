@@ -2,8 +2,8 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { deleteTodo, toggleTodo } from "../features/todo/todoSlice";
 
-function TodoItem({ props }) {
-  const { id, completed, title } = props;
+function TodoItem({ id, completed, title  }) {
+  
   const dispatch = useDispatch();
   return (
     <li
