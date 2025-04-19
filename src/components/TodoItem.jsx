@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { deleteTodo, toggleTodo } from "../features/todo/todoSlice";
+import { deleteAsyncTodo, deleteTodo, toggleTodo } from "../features/todo/todoSlice";
 
 function TodoItem({ id, completed, title  }) {
   
@@ -22,7 +22,7 @@ function TodoItem({ id, completed, title  }) {
           <span>{title}</span>
         </span>
         <button
-          onClick={() => dispatch(deleteTodo({ id }))}
+          onClick={() => dispatch(deleteAsyncTodo({ id }))}
           className="bg-red-600 rounded-md text-white cursor-pointer p-2"
         >
           Delete
