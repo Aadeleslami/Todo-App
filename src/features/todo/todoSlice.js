@@ -12,8 +12,8 @@ export const getAsyncTodos = createAsyncThunk(
   "todos/getAsyncTodos",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await api.get("/todos");
-      return data;
+      const response = await api.get("/todos");
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -39,12 +39,26 @@ export const deleteAsyncTodo = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       await api.delete(`/todos/${payload.id}`);
-      return{id:payload.id}
+      return { id: payload.id };
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
+export const toggleAsyncTodo = createAsyncThunk(
+  "todo/toggleAsyncTodo",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const { data } = await api.patch(`/todos/${payload.id}`, {
+        completed: !payload.completed,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const todoSlice = createSlice({
   name: "todos",
   initialState,
@@ -71,7 +85,7 @@ const todoSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAsyncTodos.pending, (state, action) => {
+      .addCase(getAsyncTodos.pending, (state) => {
         state.loading = true;
         state.todos = [];
         state.error = "";
@@ -86,17 +100,24 @@ const todoSlice = createSlice({
         state.todos = [];
         state.error = action.payload;
       })
-      .addCase(addAsyncTodo.pending, (state, action) => {
+      .addCase(addAsyncTodo.pending, (state) => {
         state.loading = true;
       })
       .addCase(addAsyncTodo.fulfilled, (state, action) => {
         state.loading = false;
         state.todos.push(action.payload);
       })
-  
+
       .addCase(deleteAsyncTodo.fulfilled, (state, action) => {
         state.loading = false;
-        state.todos = state.todos.filter((todo) => todo.id !== Number(action.payload.id));
+        state.todos = state.todos.filter(
+          (todo) => todo.id !== action.payload.id
+        );
+      }).addCase(toggleAsyncTodo.fulfilled,(state,action)=>{
+        state.loading = false ;
+        state.todos = action.payload
+        const selectedTodo = state.todos.find(todo => todo.id === action.payload.id)
+        selectedTodo.completed = !selectedTodo.completede
       });
   },
 });

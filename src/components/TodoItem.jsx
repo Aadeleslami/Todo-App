@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { deleteAsyncTodo, deleteTodo, toggleTodo } from "../features/todo/todoSlice";
+import { deleteAsyncTodo,  toggleAsyncTodo,  toggleTodo } from "../features/todo/todoSlice";
 
 function TodoItem({ id, completed, title  }) {
   
@@ -14,7 +14,7 @@ function TodoItem({ id, completed, title  }) {
       <div className="flex justify-between items-center mt-4">
         <span className="flex items-center justify-center">
           <input
-            onChange={(e) => dispatch(toggleTodo({ id }))}
+            onChange={() => dispatch(toggleAsyncTodo({ id,completed }))}
             type="checkbox"
             className="mr-2"
             checked={completed}
@@ -22,6 +22,7 @@ function TodoItem({ id, completed, title  }) {
           <span>{title}</span>
         </span>
         <button
+        type="button"
           onClick={() => dispatch(deleteAsyncTodo({ id }))}
           className="bg-red-600 rounded-md text-white cursor-pointer p-2"
         >

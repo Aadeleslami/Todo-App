@@ -13,7 +13,7 @@ function TodoList() {
   useEffect(()=>{
     dispatch(getAsyncTodos())
 
-  },[dispatch])
+  },[])
   return (
     <div>
       <h2>TodoList</h2>
